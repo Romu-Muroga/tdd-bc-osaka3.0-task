@@ -13,8 +13,23 @@ class VendingMachine
     10.times { @stocks << Drink.new("ファンタ", 140) }
   end
 
-  def show_admin
+  def unique_stock
+    ustocks = []
+    ustocks_n = []
+    ustocks_p = []
     @stocks.each do |stock|
+      unless ustocks_n.include?(stock.name) && ustocks_p.include?(stock.price) && ustocks_n.index(stock.name) === ustocks_p.index(stock.price)
+        ustocks_n.push(stock.name)
+        ustocks_p.push(stock.price)
+        ustocks.push(stock)
+      end
+    end
+    return ustocks
+  end
+
+  def show_admin
+    puts unique_stock
+    unique_stock.each do |stock|
       puts "値段#{stock.price} \n 名前#{stock.name} \n 在庫#{poly_stock_count(stock.name)}"
     end
   end
