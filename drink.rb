@@ -8,7 +8,7 @@ class Drink
   end
 
   def info
-    puts "ドリンク名：#{name}、値段：#{price}"
+    "ドリンク名：#{name} 値段：#{price}"
   end
 
   # def ==(other)
@@ -16,6 +16,3 @@ class Drink
   #   eql(other)
   # end
 end
-
-drink = Drink.new("coke", 140)
-drink.info
