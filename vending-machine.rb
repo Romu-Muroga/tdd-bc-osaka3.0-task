@@ -5,20 +5,21 @@ require "./category"
 class VendingMachine
   # 利用可能なお金
   AVAILABLE_MONEY = [10, 50, 100, 500, 1000]
-  attr_reader :total, :sale_amount, :stocks
+  attr_reader :total, :sale_amount, :stocks, :unsdn
 
-  # 初期設定（変更前）
+  # 初期設定（変更後）
   def initialize
     @total = 0
     @sale_amount = 0
     @stocks = []
     @drinks = []
-    5.times { @drinks.push(Drink.new("コーラ", 120)) }
+    1.times { @drinks.push(Drink.cola) }
     c = Category.new(@drinks)
     @stocks.push(c) if c.validate_class && c.validate_unique
+    @unsdn = []
   end
 
-  # 初期設定（変更後）
+  # 初期設定（変更前）
   # def initialize
   #   @total = 0
   #   @sale_amount = 0
@@ -50,14 +51,13 @@ class VendingMachine
   def purchase_select(int)#@intにすると引数ではなくインスタンス変数を参照しに行ってしまいエラーになる。
     # p int
     if @stocks[int].drinks.length > 0
-      p "出力されれば処理が飛んできている(1)"
+      # p "出力されれば処理が飛んできている(1)"
       if @stocks[int].drinks.first.price <= @total
         @total -= @stocks[int].drinks.first.price
         @sale_amount += @stocks[int].drinks.first.price
         puts "#{@stocks[int].drinks.first.name}を購入しました。"
-        # 削除後、再代入しないとエラーになる
+        # 削除後、再代入しないと初回購入時は削除されるけど次回購入時以降は削除されなくなる。
         @stocks[int].drinks = @stocks[int].drinks.drop(1)
-        # stocks_delete(int) if @stocks[int].drinks.empty?
       else
         puts "#{@stocks[int].drinks.first.price - @total}円不足しています。お金を投入して下さい。"
       end
@@ -70,8 +70,12 @@ class VendingMachine
     puts "-----------------------------------------"
     unless @stocks.empty?
       @stocks.each_with_index do |stock, idx|
+        unless stock.drinks.empty?
+          @unsdn << stock.drinks.first.name unless @unsdn.include?(stock.drinks.first.name)
+          # p @unsdn
+        end
         puts "[#{idx}]:#{stock.drinks.first.name}　#{stock.drinks.first.price}円" unless stock.drinks.empty?
-        puts "[#{idx}]:こちらの商品は、ただいま品切れ中です。" if stock.drinks.empty?
+        puts "[#{idx}]:#{@unsdn[idx]}は、ただいま品切れ中です。" if stock.drinks.empty?
       end
     end
     puts "-----------------------------------------"
@@ -96,6 +100,7 @@ class VendingMachine
   # ドリンク補充操作
   def store(drink, num)
     stocks_delete
+    @unsdn = []
     @drinks = []
     num.times { @drinks.push(drink) }
     c = Category.new(@drinks)
@@ -104,12 +109,12 @@ class VendingMachine
 
   # 空の配列を削除
   def stocks_delete
-    p "出力されれば処理が飛んできている(2)"
-    p @stocks
+    # p "出力されれば処理が飛んできている(2)"
+    # p @stocks
     @stocks.delete_if do |n|
       n.drinks.empty?
     end
-    p @stocks
+    # p @stocks
 
     # if @stocks[int].drinks.length == 0
     #   p "出力されれば処理が飛んできている(2)"
@@ -127,20 +132,20 @@ class VendingMachine
     # end
   end
 
-  # 在庫確認（変更前）
+  # 在庫確認（変更後）
   def stock_info
     @new_stocks = []
     @stocks.each do |stock|
-      p @stocks
-      p "--------"
-      p stock.drinks
-      p "--------"
+      # p @stocks
+      # p "--------"
+      # p stock.drinks
+      # p "--------"
       # 在庫を保有している配列を@new_stocksに格納
       unless stock.drinks.empty?
         @new_stocks << stock
       end
-      p @new_stocks
-      p "--------"
+      # p @new_stocks
+      # p "--------"
     end
     unless @new_stocks.empty?
       @new_stocks.each_with_index do |stock, idx|
@@ -151,7 +156,12 @@ class VendingMachine
     end
   end
 
-  # 在庫確認（変更後）
+  # ドリンク毎の在庫を計算（変更後）
+  def stock_count(name, idx)
+    @new_stocks[idx].drinks.select { |drink| drink.name == name }.count
+  end
+
+  # 在庫確認（変更前）
   # def stock_info
   #   @stocks.each_with_index do |stock, idx|
   #     puts "名前#{stock.cokes.last.name} \n 値段#{stock.cokes.last.price} \n 在庫#{stock_count(stock.cokes.last.name, idx)}"
@@ -159,11 +169,6 @@ class VendingMachine
   # end
 
   # ドリンク毎の在庫を計算（変更前）
-  def stock_count(name, idx)
-    @new_stocks[idx].drinks.select { |drink| drink.name == name }.count
-  end
-
-  # ドリンク毎の在庫を計算（変更後）
   # def stock_count(name, idx)
   #   # @stocks[idx].cokes.select { |coke| coke.name == name }.count
   #   @stocks[idx].cokes.length - 1
@@ -192,6 +197,9 @@ end
 # machine.stock_info
 
 # ドリンク補充
+# 新規でドリンクを補充するとき
 # machine.store(Drink.new("ドリンク名", 値段), 個数)
-# machine.store(Drink.new("レッドブル", 200), 5)
-# machine.store(Drink.new("水", 100), 5)
+# 既存のドリンクを補充するとき
+# machine.store(Drink.cola, 5)
+# machine.store(Drink.redbull, 5)
+# machine.store(Drink.water, 5)
