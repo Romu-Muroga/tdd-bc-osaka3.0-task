@@ -71,7 +71,7 @@ class VendingMachine
     unless @stocks.empty?
       @stocks.each_with_index do |stock, idx|
         unless stock.drinks.empty?
-          @unsdn << stock.drinks.first.name unless @unsdn.include?(stock.drinks.first.name)
+          @unsdn << stock.drinks.first.name unless @unsdn.include?(stock.drinks.first.name)#品切れ中のドリンク名を保管するための配列を準備
           # p @unsdn
         end
         puts "[#{idx}]:#{stock.drinks.first.name}　#{stock.drinks.first.price}円" unless stock.drinks.empty?
