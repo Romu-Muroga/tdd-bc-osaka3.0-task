@@ -16,10 +16,6 @@ class VendingMachine
     5.times { @drinks.push(Drink.new("コーラ", 120)) }
     c = Category.new(@drinks)
     @stocks.push(c) if c.validate_class && c.validate_unique
-    # @drinks = []
-    # 5.times { @drinks.push(Drink.new("レッドブル", 200)) }
-    # c = Category.new(@drinks)
-    # @stocks.push(c) if c.validate_class && c.validate_unique
   end
 
   # 初期設定（変更後）
@@ -34,7 +30,6 @@ class VendingMachine
   def purchase
     drink_menu
     input = gets
-    # @stocks[int].drinks.first == @coke
     if input == "x\n"
       pay_back
     elsif input != "x\n"
@@ -43,6 +38,12 @@ class VendingMachine
         purchase_select(@int)
       end
     end
+  end
+
+  # 払い戻し操作
+  def pay_back
+    puts "#{total}円のお返しです。"
+    @total = 0
   end
 
   # ドリンク選択
@@ -63,24 +64,6 @@ class VendingMachine
     end
   end
 
-  # 空の配列を削除
-  def stocks_delete(int)
-    if @stocks[int].drinks.length == 0
-      p "出力されれば処理が飛んできている(2)"
-      p @stocks
-      # @stocks = @stocks.delete_at(input)
-      # @stocks = @stocks[input].delete_if(&:empty?)
-      # @stosks = @stocks.flatten(1).compact
-      # @stocks.select { |item| !item.is_a?(Array) || !item.empty? }
-      # @stocks[input] = @stocks[input].drop(1)
-      @stocks.delete_if do |n|
-        n.drinks.empty?
-      end
-      p @stocks
-      # int -= 1
-    end
-  end
-
   # ドリンクメニュー
   def drink_menu
     puts "投入金額 #{total}円"
@@ -95,13 +78,6 @@ class VendingMachine
     puts "[x]払い戻し"
     puts ""
     puts "商品番号を選択してください。"
-  end
-
-  # 払い戻し操作
-  def pay_back
-    stocks_delete(@int)
-    puts "#{total}円のお返しです。"
-    @total = 0
   end
 
   # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
@@ -119,10 +95,36 @@ class VendingMachine
 
   # ドリンク補充操作
   def store(drink, num)
+    stocks_delete
     @drinks = []
     num.times { @drinks.push(drink) }
     c = Category.new(@drinks)
     @stocks.push(c) if c.validate_class && c.validate_unique
+  end
+
+  # 空の配列を削除
+  def stocks_delete
+    p "出力されれば処理が飛んできている(2)"
+    p @stocks
+    @stocks.delete_if do |n|
+      n.drinks.empty?
+    end
+    p @stocks
+
+    # if @stocks[int].drinks.length == 0
+    #   p "出力されれば処理が飛んできている(2)"
+    #   p @stocks
+    #   # @stocks = @stocks.delete_at(input)
+    #   # @stocks = @stocks[input].delete_if(&:empty?)
+    #   # @stosks = @stocks.flatten(1).compact
+    #   # @stocks.select { |item| !item.is_a?(Array) || !item.empty? }
+    #   # @stocks[input] = @stocks[input].drop(1)
+    #   @stocks.delete_if do |n|
+    #     n.drinks.empty?
+    #   end
+    #   p @stocks
+    #   # int -= 1
+    # end
   end
 
   # 在庫確認（変更前）
