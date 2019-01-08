@@ -38,8 +38,9 @@ class Category
 end
 
 # arr = ["1", "2", "3", "4"]
+# brr = ["5", "6", "7" ,"8"]
 # arr.each do |a|
-#   arr.each do |b|
+#   brr.each do |b|
 #     puts a
 #     puts b
 #   end
