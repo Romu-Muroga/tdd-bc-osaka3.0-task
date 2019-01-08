@@ -13,7 +13,7 @@ class VendingMachine
     @sale_amount = 0
     @stocks = []
     @drinks = []
-    1.times { @drinks.push(Drink.cola) }
+    5.times { @drinks.push(Drink.cola) }
     c = Category.new(@drinks)
     @stocks.push(c) if c.validate_class && c.validate_unique
     @unsdn = []
