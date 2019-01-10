@@ -100,7 +100,8 @@ class VendingMachine
   # ドリンク補充操作
   def store(drink, num)
     stocks_delete
-    @unsdn = []
+    #clearを使うと配列の中身に要素があっても空にしてしまう
+    @unsdn.clear
     @drinks = []
     num.times { @drinks.push(drink) }
     c = Category.new(@drinks)
