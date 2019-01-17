@@ -15,15 +15,13 @@ class Category
         break
       end
     end
-    return true
+    true
   end
 
   # ドリンククラス以外が入っていなければtrue 一つでも違うのがあるとfalse
   def validate_class
-    @drinks.each do |drink|
-      return false unless drink.kind_of?(Drink)
-    end
-    return true
+    @drinks.each { |drink| return false unless drink.kind_of?(Drink) }
+    true
   end
 end
 

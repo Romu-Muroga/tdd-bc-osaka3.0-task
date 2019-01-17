@@ -27,9 +27,7 @@ class VendingMachine
       pay_back
     elsif input.to_i >= 0 && input.to_i < @stocks.length
       @int = input.to_i
-      unless @stocks[@int].drinks.empty?
-        purchase_select(@int)
-      end
+      purchase_select(@int) unless @stocks[@int].drinks.empty?
     end
   end
 
@@ -41,6 +39,20 @@ class VendingMachine
 
   # ドリンク選択
   def purchase_select(int)#@intにすると引数ではなくインスタンス変数を参照しに行ってしまいエラーになる。
+
+    # drinks = @stocks[int].drinks
+    # drink = drinks.first unless drinks.empty?
+    #
+    # if drinks.length > 0 && drink.price <= @total
+    #   @total -= drink.price
+    #   @sale_amount += drink.price
+    #   puts "#{drink.name}を購入しました。"
+    #   # 削除後、再代入しないと初回購入時は削除されるけど次回購入時以降は削除されなくなる。
+    #   drinks = drinks.drop(1)
+    # elsif drinks.length > 0
+    #   puts "#{drink.price - @total}円不足しています。お金を投入して下さい。"
+    # end
+
     if @stocks[int].drinks.length > 0
       if @stocks[int].drinks.first.price <= @total
         @total -= @stocks[int].drinks.first.price
@@ -58,12 +70,24 @@ class VendingMachine
   def drink_menu
     puts "投入金額 #{total}円"
     puts "-----------------------------------------"
+    # unless @stocks.empty?
+    #   @stocks.each_with_index do |stock, idx|
+    #     drinks = stock.drinks
+    #     drink_name = drinks.first.name
+    #
+    #     @unsdn << drink_name unless drinks.empty? || @unsdn.include?(drink_name)#品切れ中のドリンク名を保管するための配列を準備
+    #     puts "[#{idx}]:#{drink_name}　#{drinks.first.price}円" unless drinks.empty?
+    #     puts "[#{idx}]:#{@unsdn[idx]}は、ただいま品切れ中です。" if drinks.empty?
+    #   end
+    # end
+
     unless @stocks.empty?
       @stocks.each_with_index do |stock, idx|
+        drink = stock.drinks.first
         unless stock.drinks.empty?
-          @unsdn << stock.drinks.first.name unless @unsdn.include?(stock.drinks.first.name)#品切れ中のドリンク名を保管するための配列を準備
+          @unsdn << drink.name unless @unsdn.include?(drink.name)#品切れ中のドリンク名を保管するための配列を準備
         end
-        puts "[#{idx}]:#{stock.drinks.first.name}　#{stock.drinks.first.price}円" unless stock.drinks.empty?
+        puts "[#{idx}]:#{drink.name}　#{drink.price}円" unless stock.drinks.empty?
         puts "[#{idx}]:#{@unsdn[idx]}は、ただいま品切れ中です。" if stock.drinks.empty?
       end
     end
@@ -99,9 +123,7 @@ class VendingMachine
 
   # 空の配列を削除
   def stocks_delete
-    @stocks.delete_if do |n|
-      n.drinks.empty?
-    end
+    @stocks.delete_if { |n| n.drinks.empty? }
   end
 
   # 在庫確認
@@ -109,13 +131,13 @@ class VendingMachine
     @new_stocks = []
     @stocks.each do |stock|
       # 在庫を保有している配列を@new_stocksに格納
-      unless stock.drinks.empty?
-        @new_stocks << stock
-      end
+      @new_stocks << stock unless stock.drinks.empty?
     end
+
     unless @new_stocks.empty?
       @new_stocks.each_with_index do |stock, idx|
-        puts "名前:#{stock.drinks.first.name} \n 値段:#{stock.drinks.first.price} \n 在庫:#{stock_count(stock.drinks.first.name, idx)}"
+        drink = stock.drinks.first
+        puts "名前:#{drink.name} \n 値段:#{drink.price} \n 在庫:#{stock_count(drink.name, idx)}"
       end
     else
       puts "在庫切れです。"
