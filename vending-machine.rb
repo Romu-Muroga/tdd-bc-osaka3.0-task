@@ -7,7 +7,7 @@ class VendingMachine
   AVAILABLE_MONEY = [10, 50, 100, 500, 1000]
   attr_reader :total, :sale_amount, :stocks, :unsdn
 
-  # 初期設定（変更後）
+  # 初期設定
   def initialize
     @total = 0
     @sale_amount = 0
@@ -19,21 +19,13 @@ class VendingMachine
     @unsdn = []
   end
 
-  # 初期設定（変更前）
-  # def initialize
-  #   @total = 0
-  #   @sale_amount = 0
-  #   @stocks = []
-  #   @stocks << Category.new
-  # end
-
   # 購入操作
   def purchase
     drink_menu
     input = gets
     if input == "x\n"
       pay_back
-    elsif input != "x\n"
+    elsif input.to_i >= 0 && input.to_i < @stocks.length
       @int = input.to_i
       unless @stocks[@int].drinks.empty?
         purchase_select(@int)
@@ -49,9 +41,7 @@ class VendingMachine
 
   # ドリンク選択
   def purchase_select(int)#@intにすると引数ではなくインスタンス変数を参照しに行ってしまいエラーになる。
-    # p int
     if @stocks[int].drinks.length > 0
-      # p "出力されれば処理が飛んできている(1)"
       if @stocks[int].drinks.first.price <= @total
         @total -= @stocks[int].drinks.first.price
         @sale_amount += @stocks[int].drinks.first.price
@@ -72,7 +62,6 @@ class VendingMachine
       @stocks.each_with_index do |stock, idx|
         unless stock.drinks.empty?
           @unsdn << stock.drinks.first.name unless @unsdn.include?(stock.drinks.first.name)#品切れ中のドリンク名を保管するための配列を準備
-          # p @unsdn
         end
         puts "[#{idx}]:#{stock.drinks.first.name}　#{stock.drinks.first.price}円" unless stock.drinks.empty?
         puts "[#{idx}]:#{@unsdn[idx]}は、ただいま品切れ中です。" if stock.drinks.empty?
@@ -110,43 +99,19 @@ class VendingMachine
 
   # 空の配列を削除
   def stocks_delete
-    # p "出力されれば処理が飛んできている(2)"
-    # p @stocks
     @stocks.delete_if do |n|
       n.drinks.empty?
     end
-    # p @stocks
-
-    # if @stocks[int].drinks.length == 0
-    #   p "出力されれば処理が飛んできている(2)"
-    #   p @stocks
-    #   # @stocks = @stocks.delete_at(input)
-    #   # @stocks = @stocks[input].delete_if(&:empty?)
-    #   # @stosks = @stocks.flatten(1).compact
-    #   # @stocks.select { |item| !item.is_a?(Array) || !item.empty? }
-    #   # @stocks[input] = @stocks[input].drop(1)
-    #   @stocks.delete_if do |n|
-    #     n.drinks.empty?
-    #   end
-    #   p @stocks
-    #   # int -= 1
-    # end
   end
 
-  # 在庫確認（変更後）
+  # 在庫確認
   def stock_info
     @new_stocks = []
     @stocks.each do |stock|
-      # p @stocks
-      # p "--------"
-      # p stock.drinks
-      # p "--------"
       # 在庫を保有している配列を@new_stocksに格納
       unless stock.drinks.empty?
         @new_stocks << stock
       end
-      # p @new_stocks
-      # p "--------"
     end
     unless @new_stocks.empty?
       @new_stocks.each_with_index do |stock, idx|
@@ -157,50 +122,8 @@ class VendingMachine
     end
   end
 
-  # ドリンク毎の在庫を計算（変更後）
+  # ドリンク毎の在庫を計算
   def stock_count(name, idx)
     @new_stocks[idx].drinks.select { |drink| drink.name == name }.count
   end
-
-  # 在庫確認（変更前）
-  # def stock_info
-  #   @stocks.each_with_index do |stock, idx|
-  #     puts "名前#{stock.cokes.last.name} \n 値段#{stock.cokes.last.price} \n 在庫#{stock_count(stock.cokes.last.name, idx)}"
-  #   end
-  # end
-
-  # ドリンク毎の在庫を計算（変更前）
-  # def stock_count(name, idx)
-  #   # @stocks[idx].cokes.select { |coke| coke.name == name }.count
-  #   @stocks[idx].cokes.length - 1
-  # end
-
 end
-
-# for example
-# 自販機をスタート
-# machine = VendingMachine.new
-
-# お金を投入するするとき
-# machine.insert_money(100)
-# machine.insert_money(500)
-
-# 購入操作
-# machine.purchase
-
-# 投入金額合計
-# machine.total
-
-# 売り上げ金額の表示
-# machine.sale_amount
-
-# 在庫確認
-# machine.stock_info
-
-# ドリンク補充
-# 新規でドリンクを補充するとき
-# machine.store(Drink.new("ドリンク名", 値段), 個数)
-# 既存のドリンクを補充するとき
-# machine.store(Drink.cola, 5)
-# machine.store(Drink.redbull, 5)
-# machine.store(Drink.water, 5)
