@@ -1,16 +1,6 @@
 require "./drink"
 
 class Category
-  # 変更後
-  # attr_accessor :cokes
-  #
-  # def initialize
-  #   @cokes = []
-  #   @cokes << "売り切れです。申し訳ありません！"
-  #   5.times { @cokes << Drink.new("コーラ", 120) }
-  # end
-
-  # 変更前
   attr_accessor :drinks
 
   def initialize(drinks)
