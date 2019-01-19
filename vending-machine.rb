@@ -39,30 +39,15 @@ class VendingMachine
 
   # ドリンク選択
   def purchase_select(int)#@intにすると引数ではなくインスタンス変数を参照しに行ってしまいエラーになる。
-
-    # drinks = @stocks[int].drinks
-    # drink = drinks.first unless drinks.empty?
-    #
-    # if drinks.length > 0 && drink.price <= @total
-    #   @total -= drink.price
-    #   @sale_amount += drink.price
-    #   puts "#{drink.name}を購入しました。"
-    #   # 削除後、再代入しないと初回購入時は削除されるけど次回購入時以降は削除されなくなる。
-    #   drinks = drinks.drop(1)
-    # elsif drinks.length > 0
-    #   puts "#{drink.price - @total}円不足しています。お金を投入して下さい。"
-    # end
-
-    if @stocks[int].drinks.length > 0
-      if @stocks[int].drinks.first.price <= @total
-        @total -= @stocks[int].drinks.first.price
-        @sale_amount += @stocks[int].drinks.first.price
-        puts "#{@stocks[int].drinks.first.name}を購入しました。"
-        # 削除後、再代入しないと初回購入時は削除されるけど次回購入時以降は削除されなくなる。
-        @stocks[int].drinks = @stocks[int].drinks.drop(1)
-      else
-        puts "#{@stocks[int].drinks.first.price - @total}円不足しています。お金を投入して下さい。"
-      end
+    drink = @stocks[int].drinks.first
+    if @stocks[int].drinks.length > 0 && drink.price <= @total
+      @total -= drink.price
+      @sale_amount += drink.price
+      puts "#{drink.name}を購入しました。"
+      # 削除後、再代入しないと初回購入時は削除されるけど次回購入時以降は削除されなくなる。
+      @stocks[int].drinks = @stocks[int].drinks.drop(1)
+    else
+      puts "#{drink.price - @total}円不足しています。お金を投入して下さい。"
     end
   end
 
