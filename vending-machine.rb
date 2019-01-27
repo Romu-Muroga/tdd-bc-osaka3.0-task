@@ -4,7 +4,7 @@ require "./category"
 
 class VendingMachine
   # 利用可能なお金
-  AVAILABLE_MONEY = [10, 50, 100, 500, 1000]
+  AVAILABLE_MONEY = [10, 50, 100, 500, 1000].freeze
   attr_reader :total, :sale_amount, :stocks, :unsdn
 
   # 初期設定
@@ -39,7 +39,7 @@ class VendingMachine
 
   # ドリンク選択
   def purchase_select(int)#@intにすると引数ではなくインスタンス変数を参照しに行ってしまいエラーになる。
-    drink = @stocks[int].drinks.first
+    drink = @stocks[int].drinks.first#重複する記述を変数に代入
     if @stocks[int].drinks.length > 0 && drink.price <= @total
       @total -= drink.price
       @sale_amount += drink.price
@@ -55,23 +55,10 @@ class VendingMachine
   def drink_menu
     puts "投入金額 #{total}円"
     puts "-----------------------------------------"
-    # unless @stocks.empty?
-    #   @stocks.each_with_index do |stock, idx|
-    #     drinks = stock.drinks
-    #     drink_name = drinks.first.name
-    #
-    #     @unsdn << drink_name unless drinks.empty? || @unsdn.include?(drink_name)#品切れ中のドリンク名を保管するための配列を準備
-    #     puts "[#{idx}]:#{drink_name}　#{drinks.first.price}円" unless drinks.empty?
-    #     puts "[#{idx}]:#{@unsdn[idx]}は、ただいま品切れ中です。" if drinks.empty?
-    #   end
-    # end
-
     unless @stocks.empty?
       @stocks.each_with_index do |stock, idx|
-        drink = stock.drinks.first
-        unless stock.drinks.empty?
-          @unsdn << drink.name unless @unsdn.include?(drink.name)#品切れ中のドリンク名を保管するための配列を準備
-        end
+        drink = stock.drinks.first#重複する記述を変数に代入
+        unstock_drink(drink.name) unless stock.drinks.empty?
         puts "[#{idx}]:#{drink.name}　#{drink.price}円" unless stock.drinks.empty?
         puts "[#{idx}]:#{@unsdn[idx]}は、ただいま品切れ中です。" if stock.drinks.empty?
       end
@@ -80,6 +67,11 @@ class VendingMachine
     puts "[x]払い戻し"
     puts ""
     puts "商品番号を選択してください。"
+  end
+
+  # ドリンクメニュー画面に表示する品切れ中のドリンク名を保管するための配列
+  def unstock_drink(name)
+    @unsdn << name unless @unsdn.include?(name)
   end
 
   # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
@@ -98,8 +90,7 @@ class VendingMachine
   # ドリンク補充操作
   def store(drink, num)
     stocks_delete
-    #clearを使うと配列の中身に要素があっても空にしてしまう
-    @unsdn.clear
+    @unsdn.clear#clearを使うと配列の中身に要素があっても空にしてしまう
     @drinks = []
     num.times { @drinks.push(drink) }
     c = Category.new(@drinks)
