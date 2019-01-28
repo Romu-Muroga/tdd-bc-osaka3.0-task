@@ -1,6 +1,9 @@
 require "./drink"
 require "./category"
 # require "./vending-machine.rb"
+# TODO: ソニックガーデンさんコードレビュー
+# ファイル名にハイフンは使わない。アンスコ（_）かキャメルケースで
+# require "./VendingMachine.rb"
 
 class VendingMachine
   # 利用可能なお金
@@ -8,6 +11,8 @@ class VendingMachine
   attr_reader :total, :sale_amount, :stocks, :unsdn
 
   # 初期設定
+  # TODO: ソニックガーデンさんコードレビュー
+  # 初期設定はもう少しシンプルに
   def initialize
     @total = 0
     @sale_amount = 0
@@ -38,6 +43,8 @@ class VendingMachine
   end
 
   # ドリンク選択
+  # TODO: ソニックガーデンさんコードレビュー
+  # 在庫の管理は配列のindexではなく、ハッシュのkeyでした方がいいかも
   def purchase_select(int)#@intにすると引数ではなくインスタンス変数を参照しに行ってしまいエラーになる。
     drink = @stocks[int].drinks.first#重複する記述を変数に代入
     if @stocks[int].drinks.length > 0 && drink.price <= @total

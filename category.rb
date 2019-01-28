@@ -5,6 +5,8 @@ class Category
 
   def initialize(drinks)
     @drinks = drinks
+    # TODO: ソニックガーデンさんコードレビュー
+    # 初期化のタイミングでvalidate_uniqueとvalidate_classをした方がいいかも
   end
 
   # ドリンク名 x 値段が同じ組み合わせのドリンクしか入っていなければtrue 一つでも違うのがあるとfalse
