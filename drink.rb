@@ -1,21 +1,20 @@
 class Drink
   attr_reader :name, :price
-  #alias_method :eql, :==
 
   def initialize(name, price)
     @name = name
     @price = price
   end
 
-  def info
-    puts "ドリンク名：#{name}、値段：#{price}"
+  def self.cola
+    self.new("コーラ", 120)
   end
 
-  # def ==(other)
-  #   return self.name == other.name && self.price == other.price
-  #   eql(other)
-  # end
-end
+  def self.redbull
+    self.new("レッドブル", 200)
+  end
 
-drink = Drink.new("coke", 140)
-drink.info
+  def self.water
+    self.new("水", 100)
+  end
+end
