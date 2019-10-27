@@ -26,11 +26,3 @@ class Category
     true
   end
 end
-
-# arr = ["1", "2", "3", "4"]
-# arr.each do |a|
-#   arr.each do |b|
-#     puts a
-#     puts b
-#   end
-# end

@@ -1,6 +1,6 @@
 require "./drink"
 require "./category"
-# require "./vending-machine.rb"
+# require "./vending_machine.rb"
 # TODO: ソニックガーデンさんコードレビュー
 # ファイル名にハイフンは使わない。アンスコ（_）かキャメルケースで
 # require "./VendingMachine.rb"
